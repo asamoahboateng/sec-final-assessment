@@ -23,18 +23,30 @@ function renderLogin() {
     </div>
   `;
 
+  // Handling form submission
   document.getElementById("loginForm").addEventListener("submit", function (e) {
     e.preventDefault();
+
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    if (email && password) {
+    // Email validation
+    if (!validateEmail(email)) {
+      showToast("Enter a valid email address.", 'error');
+      logAction('Email validation failed', { email });
+      return;
+    }
+
+    // Mock login attempt
+    const result = mockLogin(email, password);
+    
+    if (result.success) {
       showToast(`Welcome, ${email}!`, 'success');
-      setTimeout(() => {
-        renderDashboard(email);
-      }, 1200);
+      logAction('Login successful', { email });
+      setTimeout(() => renderDashboard(email), 1000); // Redirect to dashboard after 1 second
     } else {
-      showToast("Please fill in both fields.", 'error');
+      showToast(result.message, 'error');
+      logAction('Login failed', { email });
     }
   });
 }
@@ -48,11 +60,13 @@ function renderDashboard(userEmail) {
     </div>
   `;
 
+  // Handle log out
   document.getElementById("logoutBtn").addEventListener("click", () => {
     showToast("Logged out.", 'info');
+    logAction('User logged out', { userEmail });
     renderLogin();
   });
 }
 
-// Start app
+// Start app by rendering login page
 renderLogin();
