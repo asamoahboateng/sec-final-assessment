@@ -1,3 +1,5 @@
+// app.js
+
 const app = document.getElementById("app");
 
 function renderLogin() {
@@ -27,10 +29,12 @@ function renderLogin() {
     const password = document.getElementById("password").value.trim();
 
     if (email && password) {
-      alert(`Welcome, ${email}!`);
-      renderDashboard(email);
+      showToast(`Welcome, ${email}!`, 'success');
+      setTimeout(() => {
+        renderDashboard(email);
+      }, 1200);
     } else {
-      alert("Please enter both email and password.");
+      showToast("Please fill in both fields.", 'error');
     }
   });
 }
@@ -45,9 +49,10 @@ function renderDashboard(userEmail) {
   `;
 
   document.getElementById("logoutBtn").addEventListener("click", () => {
+    showToast("Logged out.", 'info');
     renderLogin();
   });
 }
 
-// Init the app
+// Start app
 renderLogin();
